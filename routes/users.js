@@ -1,18 +1,18 @@
 import express, { text } from "express";
-import user from "../models/user.js";
+import User from "../models/user.js";
 
 const router = express.Router();
 
 // GET: Retrieve all user from MongoDB (/user)
 router.get("/", async (req, res) => {
-      const user = await user.find(); // Fetch all user from the database
+      const user = await User.find(); // Fetch all user from the database
       res.json(user);
   });
 
   // GET: Retrieve a specific user by ID (/user/:id)
 router.get("/:id", async (req, res) => {
     const { id } = req.params;
-    const user = await user.findById(id); // Fetch the user by its ID
+    const user = await User.findById(id); // Fetch the user by its ID
     res.json(user);
     
   });
@@ -20,7 +20,7 @@ router.get("/:id", async (req, res) => {
 // POST: Add a new user to MongoDB
 router.post("/", async (req, res) => {
     const { text, sender } = req.body;
-    const newuser = new user({ text, sender }); // Create a new user instance
+    const newuser = new User({ text, sender }); // Create a new user instance
   
     try {
       const saveduser = await newuser.save(); // Save the user to the database
@@ -36,7 +36,7 @@ router.put("/:id", async (req, res) => {
     const { text, sender } = req.body;
   
     try {
-      const updateduser = await user.findByIdAndUpdate(
+      const updateduser = await User.findByIdAndUpdate(
         id,
         { text, sender }, // Update fields
         { new: true } // Return the updated document
@@ -57,7 +57,7 @@ router.delete("/:id", async (req, res) => {
     const { id } = req.params;
   
     try {
-      const deleteduser = await user.findByIdAndDelete(id); // Find and delete the user by ID
+      const deleteduser = await User.findByIdAndDelete(id); // Find and delete the user by ID
       if (deleteduser) {
         res.json({ user: 'user deleted successfully!' });
       } else {
