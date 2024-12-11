@@ -4,11 +4,12 @@ import mongoose from 'mongoose';
 import passport from 'passport';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import session from 'express-session';
-import User from './models/User.js';
+import User from './models/user.js';
 import routeIndex from './routes/index.js';
 import routeTest from './routes/test.js';
 import routeMessages from './routes/messages.js';
 import routeUsers from './routes/users.js';
+import mongoStore from 'connect-mongo';
 
 dotenv.config();
 
