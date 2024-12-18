@@ -19,13 +19,13 @@ router.get("/:id", async (req, res) => {
 
 // POST: Add a new cafe to MongoDB
 router.post("/", async (req, res) => {
-    const { text, sender } = req.body;
-    const newCafe = new Cafe({ text, sender }); // Create a new cafe instance
+    const newCafe = new Cafe(req.body); // Create a new cafe instance
   
     try {
       const savedCafe = await newCafe.save(); // Save the cafe to the database
       res.status(201).json({ cafe: 'Cafe added successfully!', cafedata: savedCafe });
     } catch (err) {
+      console.log(err);
       res.status(400).json({ cafe: 'Error adding cafe', error: err.cafe });
     }
   });

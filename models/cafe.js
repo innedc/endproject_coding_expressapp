@@ -6,6 +6,7 @@ const cafeSchema = new mongoose.Schema({
     price: { type: String, required: true }, 
     location: { type: String, required: true }, 
     hours: { type: String, required: true }, 
+    picture: { type: String, required: true },
     createAt: { type: Date, default: Date.now },
 });
 

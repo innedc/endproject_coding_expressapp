@@ -9,6 +9,7 @@ import routeIndex from './routes/index.js';
 import routeTest from './routes/test.js';
 import routeMessages from './routes/messages.js';
 import routeUsers from './routes/users.js';
+import routeCafes from './routes/cafes.js';
 import mongoStore from 'connect-mongo';
 
 dotenv.config();
@@ -17,6 +18,8 @@ const app = express();
 
 app.use(express.json());
 
+// picture folder should be public
+app.use(express.static('pictures'));
 
 // Configure session middleware
 app.use(
@@ -82,6 +85,7 @@ app.use('/', routeIndex);
 app.use('/test', routeTest);
 app.use ('/messages', routeMessages);
 app.use ('/users', routeUsers);
+app.use ('/cafes', routeCafes);
 
 // Google Authentication Routes
 app.get('/auth/google', (req, res, next) => {
