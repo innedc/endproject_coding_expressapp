@@ -11,6 +11,7 @@ import routeMessages from './routes/messages.js';
 import routeUsers from './routes/users.js';
 import routeCafes from './routes/cafes.js';
 import mongoStore from 'connect-mongo';
+import path from 'path';
 
 dotenv.config();
 
@@ -19,7 +20,7 @@ const app = express();
 app.use(express.json());
 
 // picture folder should be public
-app.use(express.static('pictures'));
+app.use(express.static('public'));
 
 // Configure session middleware
 app.use(

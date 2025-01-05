@@ -18,17 +18,28 @@ router.get("/:id", async (req, res) => {
   });
 
 // POST: Add a new cafe to MongoDB
-router.post("/", async (req, res) => {
-    const newCafe = new Cafe(req.body); // Create a new cafe instance
-  
-    try {
-      const savedCafe = await newCafe.save(); // Save the cafe to the database
-      res.status(201).json({ cafe: 'Cafe added successfully!', cafedata: savedCafe });
-    } catch (err) {
-      console.log(err);
-      res.status(400).json({ cafe: 'Error adding cafe', error: err.cafe });
+// POST: Add a new cafe to MongoDB
+router.post('/', async (req, res) => {
+  try {
+    const { title, location, price, hours } = req.body;
+
+    // Ensure the data exists in the request body
+    if (!title || !location || !price || !hours) {
+      return res.status(400).json({ message: 'Missing fields' });
     }
-  });
+
+    // Create a new instance of Cafe model
+    const newCafe = new Cafe({ title, location, price, hours });
+
+    // Save to MongoDB
+    await newCafe.save();
+    
+    res.status(201).json({ message: 'Cafe added successfully!', cafe: newCafe });
+  } catch (error) {
+    res.status(500).json({ message: 'Error adding cafe', error: error.message });
+  }
+});
+
 
 // PUT: Update an existing cafe in MongoDB by ID
 router.put("/:id", async (req, res) => {
@@ -47,8 +58,8 @@ router.put("/:id", async (req, res) => {
       } else {
         res.status(404).json({ cafe: 'Cafe not found!' });
       }
-    } catch (err) {
-      res.status(400).json({ cafe: 'Error updating Cafe', error: err.cafe });
+    } catch (error) {
+      res.status(400).send(error.message);
     }
   });
 
@@ -63,8 +74,8 @@ router.delete("/:id", async (req, res) => {
       } else {
         res.status(404).json({ cafe: 'Cafe not found!' });
       }
-    } catch (err) {
-      res.status(400).json({ cafe: 'Error deleting caef', error: err.cafe });
+    } catch (error) {
+      res.status(500).send(error.message);
     }
   });
 
