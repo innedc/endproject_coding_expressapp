@@ -1,23 +1,23 @@
-import express, { text } from "express";
+import express from "express";
 import Cafe from "../models/cafe.js";
 
 const router = express.Router();
 
-// GET: Retrieve all cafes from MongoDB (/cafe)
-router.get("/", async (req, res) => {
-      const cafe = await Cafe.find(); // Fetch all cafes from the database
-      res.json(cafe);
-  });
+// GET: Retrieve all cafes from MongoDB (/cafes)
+router.get('/', async (req, res) => {
+  try {
+    const cafes = await Cafe.find(); // Fetch all cafes from the database
+    const cafesWithFullImageUrl = cafes.map((cafe) => ({
+      ...cafe._doc, // Spread the cafe document
+      picture: `https://endproject-coding.onrender.com/pictures/${cafe.picture}` // Full URL to the picture
+    }));
+    res.json(cafesWithFullImageUrl); // Send the updated data with the full image URLs
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error fetching cafes' });
+  }
+});
 
-  // GET: Retrieve a specific cafe by ID (/cafe/:id)
-router.get("/:id", async (req, res) => {
-    const { id } = req.params;
-    const cafe = await Cafe.findById(id); // Fetch the cafe by its ID
-    res.json(cafe);
-    
-  });
-
-// POST: Add a new cafe to MongoDB
 // POST: Add a new cafe to MongoDB
 router.post('/', async (req, res) => {
   try {
