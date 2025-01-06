@@ -10,7 +10,6 @@ import routeTest from './routes/test.js';
 import routeMessages from './routes/messages.js';
 import routeUsers from './routes/users.js';
 import routeCafes from './routes/cafes.js';
-import Cafe from './models/cafe';  // Import your Cafe model
 import mongoStore from 'connect-mongo';
 import path from 'path';
 
@@ -20,8 +19,8 @@ const app = express();
 
 app.use(express.json());
 
-// Set up static folder for serving images
-app.use('/pictures', express.static(path.join(__dirname, 'pictures', 'pictures')));
+// picture folder should be public
+app.use(express.static('public'));
 
 // Configure session middleware
 app.use(

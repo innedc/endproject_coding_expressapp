@@ -1,42 +1,30 @@
-import express from "express";
+import express, { text } from "express";
 import Cafe from "../models/cafe.js";
 
 const router = express.Router();
 
-// GET: Retrieve all cafes from MongoDB (/cafes)
-router.get('/', async (req, res) => {
-  try {
-    const cafes = await Cafe.find(); // Fetch all cafes from the database
-    const cafesWithFullImageUrl = cafes.map((cafe) => ({
-      ...cafe._doc, // Spread the cafe document
-      picture: `https://endproject-coding.onrender.com/pictures/${cafe.picture}` // Full URL to the picture
-    }));
-    res.json(cafesWithFullImageUrl); // Send the updated data with the full image URLs
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Error fetching cafes' });
-  }
-});
+// GET: Retrieve all cafes from MongoDB (/cafe)
+router.get("/", async (req, res) => {
+      const cafe = await Cafe.find(); // Fetch all cafes from the database
+      res.json(cafe);
+  });
+
+  // GET: Retrieve a specific cafe by ID (/cafe/:id)
+router.get("/:id", async (req, res) => {
+    const { id } = req.params;
+    const cafe = await Cafe.findById(id); // Fetch the cafe by its ID
+    res.json(cafe);
+    
+  });
 
 // POST: Add a new cafe to MongoDB
 router.post('/', async (req, res) => {
   try {
-    const { title, location, price, hours } = req.body;
-
-    // Ensure the data exists in the request body
-    if (!title || !location || !price || !hours) {
-      return res.status(400).json({ message: 'Missing fields' });
-    }
-
-    // Create a new instance of Cafe model
-    const newCafe = new Cafe({ title, location, price, hours });
-
-    // Save to MongoDB
-    await newCafe.save();
-    
-    res.status(201).json({ message: 'Cafe added successfully!', cafe: newCafe });
+    const newCafe = new Cafe(req.body); // Create a new instance of Cafe model
+    await newCafe.save(); // Save to MongoDB
+    res.status(201).json({ user: 'Cafe added successfully!', userData: newCafe });
   } catch (error) {
-    res.status(500).json({ message: 'Error adding cafe', error: error.message });
+    res.status(500).json({ user: 'Error adding Cafe', error: error.message });
   }
 });
 
