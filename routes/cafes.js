@@ -1,30 +1,31 @@
-import express, { text } from "express";
+import express from "express";
 import Cafe from "../models/cafe.js";
 
 const router = express.Router();
 
-// GET: Retrieve all cafes from MongoDB (/cafe)
+// GET: Retrieve all cafes from MongoDB
 router.get("/", async (req, res) => {
-      const cafe = await Cafe.find(); // Fetch all cafes from the database
-      res.json(cafe);
-  });
-
-  // GET: Retrieve a specific cafe by ID (/cafe/:id)
-router.get("/:id", async (req, res) => {
-    const { id } = req.params;
-    const cafe = await Cafe.findById(id); // Fetch the cafe by its ID
-    res.json(cafe);
-    
-  });
+  try {
+    const cafes = await Cafe.find();
+    res.json(cafes);
+  } catch (error) {
+    res.status(500).json({ message: "Error retrieving cafes", error });
+  }
+});
 
 // POST: Add a new cafe to MongoDB
+// backend/routes/cafes.js
 router.post('/', async (req, res) => {
   try {
-    const newCafe = new Cafe(req.body); // Create a new instance of Cafe model
-    await newCafe.save(); // Save to MongoDB
-    res.status(201).json({ user: 'Cafe added successfully!', userData: newCafe });
+    // Ensure you receive the correct data from req.body
+    console.log(req.body);  // Log the incoming data to check what you're getting
+
+    const newCafe = new Cafe(req.body);
+    await newCafe.save();
+    res.status(201).json({ message: 'Cafe added successfully', cafe: newCafe });
   } catch (error) {
-    res.status(500).json({ user: 'Error adding Cafe', error: error.message });
+    console.error("Error adding cafe:", error);  // Log the error for debugging
+    res.status(500).json({ message: 'Error adding cafe', error: error.message });
   }
 });
 
